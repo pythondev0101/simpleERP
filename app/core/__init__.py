@@ -1,2 +1,2 @@
-from .base_model import BaseModel
+from .mongo_object import MongoObject
 

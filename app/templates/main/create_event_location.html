@@ -1,0 +1,269 @@
+{% extends 'core/base.html' %}
+
+
+{% block head %}
+<!-- Data Table Css -->
+<link rel="stylesheet" type="text/css"
+    href="{{url_for('static', filename='bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+<link rel="stylesheet" type="text/css"
+    href="{{url_for('static', filename='pages/data-table/css/buttons.dataTables.min.css')}}">
+<link rel="stylesheet" type="text/css"
+    href="{{url_for('static', filename='bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}">
+<!-- animation nifty modal window effects css -->
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/component.css')}}">
+
+<!-- jpro forms css -->
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='pages/j-pro/css/demo.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='pages/j-pro/css/font-awesome.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='pages/j-pro/css/j-pro-modern.css')}}">
+{% endblock head %}
+
+
+{% block scripts %}
+<!-- data-table js -->
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='pages/data-table/js/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='pages/data-table/js/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='pages/data-table/js/vfs_fonts.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+<!-- sweet alert modal.js intialize js -->
+<!-- modalEffects js nifty modal window effects -->
+<script type="text/javascript" src="{{url_for('static', filename='js/modalEffects.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/classie.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY0mgQROcL8aXp-abr432Xx8DMeItHkzM"></script>
+<script>
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", CSRF_TOKEN);
+            }
+        }
+    });        
+
+    $.validator.setDefaults({
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+
+    $(document).ready(function () {
+        var map;
+        var marker;
+        function initialize() {
+            var mapProp = {
+                center: new google.maps.LatLng(14.6091, 121.0223, 12),
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("google-map"), mapProp);    
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+             });
+        }
+
+        function placeMarker(location) {
+            if(marker != null){
+                marker.setMap(null);
+            }
+
+            marker = new google.maps.Marker({
+                position: location, 
+                map: map
+            });
+
+            $("#lat").val(marker.position.lat);
+            $("#lng").val(marker.position.lng);
+        }
+   
+        // Sets the map on all markers in the array.
+        function setMapOnAll(map) {
+            for (let i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+            }
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        $("#li_event_locations").addClass('active');
+        $("#li_event_locations").addClass('pcoded-trigger');
+
+        $('#frm_create_event_location').validate({
+            'rules': {
+                'name': {
+                    'required': true
+                },
+                'description': {
+                    'required': false,
+                },
+                'address': {
+                    'required': false,
+                },
+                'date_start': {
+                    'required': false,
+                },
+                'date_end': {
+                    'required': false,
+                },
+            },
+            'submitHandler': function(form){
+                var xform = $(form);
+
+                swal({
+                    title: `Add this data?`,
+                    text: "Double check it you before submit!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Confirm!",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function(){
+                    setTimeout(function () {
+                        console.log(xform.attr('action'));
+
+                        $.ajax({
+                            type: xform.attr('method'),
+                            url: xform.attr('action'),
+                            data: xform.serialize(),
+                            success: function (response) {
+                                console.log(response.data);
+                                swal("Success!", response.message, "success");
+                                event.stopPropagation();
+                            },
+                            error: function (data) {
+                                swal("Error Occured!", "Please refresh the page then try again!", "error");
+                            },
+                        });
+                    }, 500);
+                });
+            }
+        });
+    });
+</script>
+{% endblock scripts %}
+
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- Main-body start -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- Page-header start -->
+                <div class="page-header">
+                    <div class="row align-items-end">
+                        <div class="col-lg-8">
+                            <div class="page-header-title">
+                                <div class="d-inline">
+                                    <h4>Event Locations</h4>
+                                    <span>Create</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="page-header-breadcrumb">
+                                <!--                                 
+                                <ul class="breadcrumb-title">
+                                    <li class="breadcrumb-item">
+                                        <a href="index-1.htm"> <i class="feather icon-home"></i> </a>
+                                    </li>
+                                    <li class="breadcrumb-item"><a href="#!">Billing</a>
+                                    </li>
+                                </ul> -->
+                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Page-header end -->
+
+                <div class="page-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- Contact details card start -->
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="j-wrapper j-wrapper-640">
+                                        <form id="frm_create_event_location" action="{{url_for('api.create_event_location')}}" method="post" class="j-pro" novalidate="">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                            <input type="hidden" class="form-control" id="lat" name="lat" value="">
+                                            <input type="hidden" class="form-control" id="lng" name="lng" value="">
+                                            <!-- end /.header-->
+                                            <div class="j-content">
+                                                <!-- start google map -->
+                                                <div class="j-unit">
+                                                    <label class="j-label m-b-10">Google Map</label>
+                                                    <div class="unit" id="google-map" style="width:100%;height:380px;">
+                                                    </div>
+                                                </div>
+                                                <!-- end google map -->
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="name">NAME</label>
+                                                            <input type="text" class="form-control" name="name" placeholder="" value="">
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="description">DESCRIPTION</label>
+                                                            <input type="text" class="form-control" id="description" name="description" placeholder="" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12 mb-3">
+                                                            <label for="address">Address</label>
+                                                            <input type="text" class="form-control" id="address" name="address" placeholder="" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="date_start">Start Date</label>
+                                                            <input type="date" class="form-control" id="date_start" name="date_start" placeholder="" value="">
+                                                        </div>
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="date_end">End Date</label>
+                                                            <input type="date" class="form-control" id="date_end" name="date_end" placeholder="" value="">
+                                                        </div>
+                                                    </div>
+                                            <!-- end /.content -->
+                                            <div class="j-footer">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                            <!-- end /.footer -->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Contact details card end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Warning Section Starts -->
+        <div id="styleSelector">
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -16,6 +16,7 @@
                     <!-- Authentication card start -->
                     
                         <form action="{{url_for('auth.login')}}" method="post" class="md-float-material form-material">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <div class="text-center">
                                 <img src="{{url_for('static', filename='img/logo.png')}}" alt="logo.png">
                             </div>

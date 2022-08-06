@@ -1,6 +1,6 @@
 <nav class="pcoded-navbar">
     <div class="pcoded-inner-navbar main-menu">
-        <div class="pcoded-navigatio-lavel">Delivery Management</div>
+        <div class="pcoded-navigatio-lavel">Dashboard</div>
         <ul class="pcoded-item pcoded-left-item">
             <li id="li_dashboard" class="">
                 <a href="{{url_for('main.dashboard')}}">
@@ -8,60 +8,61 @@
                     <span class="pcoded-mtext">Dashboard</span>
                 </a>
             </li>
-            <li id="li_billing" class="">
-                <a href="{{url_for('main.dashboard')}}">
-                    <span class="pcoded-micon"><i class="feather icon-credit-card"></i></span>
-                    <span class="pcoded-mtext">Billing</span>
-                </a>
-            </li>
-            <li id="li_delivery" class="">
-                <a href="{{url_for('main.dashboard')}}">
-                    <span class="pcoded-micon"><i class="feather icon-map"></i></span>
-                    <span class="pcoded-mtext">Delivery</span>
-                </a>
-            </li>
-            <li id="li_location" class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-map-pin"></i></span>
-                    <span class="pcoded-mtext">Location</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li id="li_sub_area" class="">
-                        <a href="{{url_for('main.dashboard')}}">
-                            <span class="pcoded-mtext">Sub Areas</span>
-                        </a>
-                    </li>
-                    <li id="li_area" class="">
-                        <a href="{{url_for('main.dashboard')}}">
-                            <span class="pcoded-mtext">Areas</span>
-                        </a>
-                    </li>
-                    <li id="li_municipality" class="">
-                        <a href="{{url_for('main.dashboard')}}">
-                            <span class="pcoded-mtext">Municipalities</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li id="li_subscriber" class="">
+        </ul>
+        <div class="pcoded-navigatio-lavel">Membership</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li id="li_registrations" class="">
                 <a href="{{url_for('main.dashboard')}}">
                     <span class="pcoded-micon"><i class="feather icon-users"></i></span>
-                    <span class="pcoded-mtext">Subscribers</span>
+                    <span class="pcoded-mtext">Registration</span>
                 </a>
             </li>
-            <li id="li_messenger" class="">
+            <li id="li_membership_records" class="">
                 <a href="{{url_for('main.dashboard')}}">
                     <span class="pcoded-micon"><i class="feather icon-users"></i></span>
-                    <span class="pcoded-mtext">Messengers</span>
+                    <span class="pcoded-mtext">Membership Records</span>
                 </a>
             </li>
         </ul>
-        <div class="pcoded-navigatio-lavel">System Management</div>
+        <div class="pcoded-navigatio-lavel">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">
-            <li id="li_user" class="">
+            <li id="li_cash_flow" class="">
                 <a href="{{url_for('main.dashboard')}}">
                     <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Cash Flow</span>
+                </a>
+            </li>
+            <li id="li_fixed_asset" class="">
+                <a href="{{url_for('main.dashboard')}}">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Fixed Asset</span>
+                </a>
+            </li>
+        </ul>
+        <div class="pcoded-navigatio-lavel">Management</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li id="li_event_locations" class="">
+                <a href="{{url_for('main.event_locations')}}">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Event Locations</span>
+                </a>
+            </li>
+            <li id="li_incoming_event" class="">
+                <a href="{{url_for('main.dashboard')}}">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Incoming Event</span>
+                </a>
+            </li>
+            <li id="li_users" class="">
+                <a href="{{url_for('main.users')}}">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
                     <span class="pcoded-mtext">Users</span>
+                </a>
+            </li>
+            <li id="li_logs" class="">
+                <a href="{{url_for('main.dashboard')}}">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Logs</span>
                 </a>
             </li>
         </ul>

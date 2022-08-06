@@ -38,7 +38,9 @@
     <!-- sweet alert framework -->
     <link rel="stylesheet" type="text/css"
         href="{{url_for('static', filename='bower_components/sweetalert/css/sweetalert.css')}}">
-    
+    <!-- override styles -->
+    <link rel="stylesheet" type="text/css"
+        href="{{url_for('static', filename='css/override.css')}}">
     {% block head %} {% endblock head %}
 
     <style>
@@ -46,6 +48,10 @@
             top: 0;
          }
     </style>
+    
+    <script type="text/javascript">
+        CSRF_TOKEN = "{{csrf_token()}}";
+    </script>
 </head>
 <body>
     <!-- Pre-loader start -->
@@ -174,6 +180,10 @@
     <script type="text/javascript"
         src="{{url_for('static', filename='bower_components/sweetalert/js/sweetalert.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/modal.js')}}"></script>
+    <!-- j-pro js -->
+    <script type="text/javascript" src="{{url_for('static', filename='pages/j-pro/js/jquery.ui.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='pages/j-pro/js/jquery.maskedinput.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='pages/j-pro/js/jquery.j-pro.js')}}"></script>
 
     {% block scripts %} {% endblock scripts %}
 
