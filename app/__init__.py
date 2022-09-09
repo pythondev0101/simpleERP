@@ -1,12 +1,14 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_pymongo import PyMongo
+from flask_qrcode import QRcode
 from flask_wtf.csrf import CSRFProtect
 from config import APP_CONFIG
 
 CSRF = CSRFProtect()
 MONGO = PyMongo()
 LOGIN_MANAGER = LoginManager()
+QR_CODE = QRcode()
 
 
 def create_app(config_name):
@@ -16,6 +18,7 @@ def create_app(config_name):
     CSRF.init_app(app)
     MONGO.init_app(app)
     LOGIN_MANAGER.init_app(app)
+    QR_CODE.init_app(app)
     
     LOGIN_MANAGER.login_view = 'auth.login'
     LOGIN_MANAGER.login_message = "You must be logged in to access this page."

@@ -28,8 +28,11 @@ def dt_users():
     for x in query:
         table_data.append([
             x.id,
+            x.tfoe_no,
             x.full_name,
-            str(x.date_created),
+            x.contact_no,
+            x.email_address,
+            x.batch,
             ''
         ])
 

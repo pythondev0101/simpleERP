@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from app import MONGO
 from app.datatables import bp_datatables
 from app.templates.main.models.event_location_model import EventLocation
 from app.utils import format_date
@@ -18,21 +19,21 @@ def dt_event_locations():
     filter: dict
     
     filter = {}
-    query: EventLocation = EventLocation.find_many(filter, skip=start, limit=length)
-    total_records = len(EventLocation.find_many(filter))
-    filtered_records = len(query)
+    query = MONGO.db.events.find(filter).skip(start).limit(length)
+    total_records = MONGO.db.events.find(filter).count()
+    filtered_records = query.count()
     
     table_data = []
     
-    x: EventLocation
-    for x in query:
+    for row in query:
+        event = EventLocation(data=row)
         table_data.append([
-            x.id,
-            {'name': x.name, 'description': x.description},
-            x.address,
-            format_date(x.date_start),
-            format_date(x.date_end),
-            format_date(x.date_created),
+            event.id,
+            {'name': event.name, 'description': event.description},
+            event.address,
+            format_date(event.date_start),
+            format_date(event.date_end),
+            format_date(event.date_created),
             ''
         ])
 

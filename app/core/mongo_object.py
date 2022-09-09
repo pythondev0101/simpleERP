@@ -15,7 +15,8 @@ class MongoObject(object):
 
     def __init__(self, data=None, **params):
         if data:
-            self.__dict__.update(data)
+            self._id = data.get('_id')
+            self.date_created = data.get('date_created')
             
         if 'filter' in params:
             self._filter = params['filter']

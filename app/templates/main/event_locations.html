@@ -33,6 +33,7 @@
     src="{{url_for('static', filename='bower_components/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
 <script
     src="{{url_for('static', filename='bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <!-- sweet alert modal.js intialize js -->
 <!-- modalEffects js nifty modal window effects -->
 <script type="text/javascript" src="{{url_for('static', filename='js/modalEffects.js')}}"></script>
@@ -106,7 +107,7 @@
                     return `
                     <td class="action-icon">
                         <a href="#!" class="m-r-15 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="icofont icofont-ui-edit"></i></a>
-                        <a href="#!" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="icofont icofont-delete-alt"></i></a>
+                        <button href="#!" class="btn-qr-code text-muted md-trigger" data-toggle="tooltip" data-placement="top" title="" data-original-title="QR Code" data-modal="mdl_qr_code"><i class="icofont icofont-qr-code"></i></button>
                     </td>
                     `
                 }
@@ -264,9 +265,37 @@
             }
         });
 
+        $("#tbl_event_locations tbody").on('click', '.btn-qr-code', function () {
+            $("#div_qr_code").empty();
+
+            var overlay = document.querySelector('.md-overlay');
+            const modal = $("#mdl_qr_code");
+            modal.addClass('md-show');
+            function removeModalHandler() {
+                modal.removeClass('md-show');
+            }
+            overlay.removeEventListener('click', removeModalHandler);
+            overlay.addEventListener('click', removeModalHandler);
+
+            // Get row data
+            var current_row = $(this).parents('tr');//Get the current row
+            if (current_row.hasClass('child')) {//Check if the current row is a child row
+                current_row = current_row.prev();//If it is, then point to the row before it (its 'parent')
+            }
+            const data = dtEventLocations.row(current_row).data();//At this point, current_row refers to a valid row in the table, whether is a child row (collapsed by the DataTable's responsiveness) or a 'normal' row
+            var qrcode = new QRCode(document.getElementById("div_qr_code"), {
+                text: data[1],
+                width: 250,
+                height: 250,
+                colorDark : "#5868bf",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            console.log('Row data: ' + data);
+        });
 
         $(".close_btn").click(function(event){
-            const modal = $("#mdl_edit_event_location");
+            const modal = $("#mdl_qr_code");
 
 			event.stopPropagation();
             modal.removeClass('md-show');
@@ -289,22 +318,15 @@
                         <div class="col-lg-8">
                             <div class="page-header-title">
                                 <div class="d-inline">
-                                    <h4>Event Locations</h4>
+                                    <h4>Events</h4>
                                     <span>List</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="page-header-breadcrumb">
-                                <!--                                 
-                                <ul class="breadcrumb-title">
-                                    <li class="breadcrumb-item">
-                                        <a href="index-1.htm"> <i class="feather icon-home"></i> </a>
-                                    </li>
-                                    <li class="breadcrumb-item"><a href="#!">Billing</a>
-                                    </li>
-                                </ul> -->
-                        
+                                <a href="{{url_for('main.create_event_location')}}" type="button" class="btn btn-primary waves-effect waves-light f-right d-inline-block"> <i class="icofont icofont-plus m-r-5"></i> Create
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -312,13 +334,13 @@
                 <!-- Page-header end -->
 
                 <div class="page-body">
+             
                     <!-- Server Side Processing table start -->
                     <div class="card">
                         <div class="card-header">
                             <!-- <h5>Sub Area List</h5> -->
                             <!-- <span>Responsive will automatically detect new DataTable instances being created on a page and initialize itself if it finds the responsive option or responsive class name on the table, as shown in the other examples.</span> -->
-                            <a href="{{url_for('main.create_event_location')}}" type="button" class="btn btn-primary waves-effect waves-light f-right d-inline-block"> <i class="icofont icofont-plus m-r-5"></i> Create
-                            </a>
+
                         </div>
                         <div class="card-block">
                             <div class="dt-responsive table-responsive">
@@ -424,6 +446,18 @@
                                 <div class="text-center">
                                     <button type="button" class="btn btn-primary waves-effect m-r-20 f-w-600 md-close d-inline-block close_btn">Close</button>
                                     <button form="frm_edit_event_location" type="submit" class="frm-edit-group btn btn-primary waves-effect m-r-20 f-w-600 d-inline-block save_btn">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Contact Start Model start-->
+                    <div class="md-modal md-effect-13 addcontact" id="mdl_qr_code">
+                        <div class="md-content">
+                            <h3 class="f-26">Member's name</h3>
+                            <div>
+                                <div style="text-align: center;" id="div_qr_code"></div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary waves-effect m-r-20 f-w-600 md-close d-inline-block close_btn">Close</button>
                                 </div>
                             </div>
                         </div>

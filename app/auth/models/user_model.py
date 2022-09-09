@@ -13,17 +13,32 @@ class User(UserMixin, MongoObject):
     lname: str
     email: str
     password_hash: str
+    tfoe_no: str
+    club_designation:str
+    contact_no: str
+    email_address: str
+    batch: str
+    occupation: str
+    address: str
+    type: str
     
-    
-    def __init__(self, data=None, **params):
-        super(User, self).__init__(data=data, **params)
+    def __init__(self, data=None):
+        super(User, self).__init__(data=data)
+        
         if data:
-            self.__dict__.update(data)
-            # self.username = data.get('username', '')
-            # self.fname = data.get('fname', '')
-            # self.lname = data.get('lname', '')
-            # self.email = data.get('email', '')
-            # self.password_hash = data.get('password_hash', '')
+            self.username = data.get('username', '')
+            self.fname = data.get('fname', '')
+            self.lname = data.get('lname', '')
+            self.email = data.get('email', '')
+            self.password_hash = data.get('password_hash', '')
+            self.tfoe_no = data.get('tfoe_no', '')
+            self.club_designation = data.get('club_designation', '')
+            self.contact_no = data.get('contact_no', '')
+            self.email_address = data.get('email_address', '')
+            self.batch = data.get('batch', '')
+            self.occupation = data.get('occupation', '')
+            self.address = data.get('address', '')
+            self.type = data.get('type', 'member')
 
 
     def set_password(self, password):
