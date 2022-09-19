@@ -283,8 +283,9 @@
                 current_row = current_row.prev();//If it is, then point to the row before it (its 'parent')
             }
             const data = dtEventLocations.row(current_row).data();//At this point, current_row refers to a valid row in the table, whether is a child row (collapsed by the DataTable's responsiveness) or a 'normal' row
+            
             var qrcode = new QRCode(document.getElementById("div_qr_code"), {
-                text: data[1],
+                text: data[0],
                 width: 250,
                 height: 250,
                 colorDark : "#5868bf",
